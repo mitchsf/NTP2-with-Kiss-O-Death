@@ -38,6 +38,7 @@ NTP2::~NTP2() {
 }
 
 void NTP2::begin(const char* server) {
+  oInterval = NTP_WINTERVAL;
   this->server = server;
   udp->begin(NTP_PORT);
   update(); // force get
@@ -46,6 +47,7 @@ void NTP2::begin(const char* server) {
 }
 
 void NTP2::begin(IPAddress serverIP) {
+  oInterval = NTP_WINTERVAL;
   this->serverIP = serverIP;
   udp->begin(NTP_PORT);
   update(); // force get
@@ -95,7 +97,7 @@ byte NTP2::update() {
 }
 
       uint32_t ntpTime = ntpQuery[40] << 24 | ntpQuery[41] << 16 | ntpQuery[42] << 8 | ntpQuery[43];
-      utcTime = ntpTime - SEVENTYYEARS + NTP_WAIT_SECONDS; // wait NTP_WAIT so add NTP_WAIT
+      utcTime = ntpTime - SEVENTYYEARS + NTP_WAIT / 1000; // wait NTP_WAIT so add NTP_WAIT
       interval = oInterval; // good read so set to original interval
       if (lastUtcTime == 0) lastUtcTime = utcTime;
       if (utcTime >= lastUtcTime  && checkValid()) { // more updates to fix bad read 04/13/23

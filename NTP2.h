@@ -38,9 +38,8 @@
 #define NTP_PACKET_SIZE 48
 #define NTP_PORT 123
 #define NTP_WAIT 1000 // delay before unpacking packet, in ms
-#define NTP_WAIT_SECONDS 1 // relate to NTP_WAIT
-#define NTP_EINTERVAL 60000;  // 2 minute retry delay after bad read
-
+#define NTP_EINTERVAL 60000;  // 1 minute retry delay after bad read
+#define NTP_WINTERVAL 1800000; // 30 minutes between successful tries
 
 class NTP2 {
   public:
@@ -105,7 +104,7 @@ class NTP2 {
      * 
      * @param updateInterval in ms, default = 1,800,0000ms
      */
-	 void updateInterval(uint32_t oInterval);
+	 void updateInterval(uint32_t interval);
 
 	 /**
 	 @brief returns status of last NTP update attempt
@@ -128,7 +127,7 @@ class NTP2 {
     time_t utcCurrent = 0;
     struct tm *current;
     uint32_t interval = 0; // current interval setting
-	uint32_t oInterval = 1800000; // 30 minute default
+	uint32_t oInterval;
     uint32_t lastUpdate = 0;
     uint32_t utcTime = 0;
 	uint32_t lastUtcTime = 0;
@@ -142,7 +141,6 @@ class NTP2 {
         const char *code;
         byte ret;
     };
-
     // C++17 inline static member definition in the header
     inline static const KodEntry kodLookup[] = {
         {"RATE", 0x2},
